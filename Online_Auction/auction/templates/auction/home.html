@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Auction - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .navbar .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .navbar a {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .navbar a:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .navbar .btn-create {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+        
+        .navbar .btn-create:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Search and Filter Section */
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .search-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-bar button {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-bar button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group label {
+            display: block;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        /* Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .item-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .item-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .item-content {
+            padding: 20px;
+        }
+        
+        .item-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .item-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            max-height: 60px;
+            overflow: hidden;
+        }
+        
+        .item-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .item-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .item-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-closed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* No Items Message */
+        .no-items {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .no-items h3 {
+            font-size: 28px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .no-items p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">🏷️ Online Auction</div>
+        <div class="nav-links">
+            <a href="{% url 'auction:home' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a href="#">My Bids</a>
+                <a href="#">My Listings</a>
+                <a href="#">Watchlist</a>
+                <a href="{% url 'auction:logout' %}">Logout ({{ user.username }})</a>
+                <a href="{% url 'auction:create_item' %}" class="btn-create">+ Create Listing</a>
+            {% else %}
+                <a href="{% url 'auction:login' %}">Login</a>
+                <a href="{% url 'auction:register' %}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Search and Filter Section -->
+        <div class="search-section">
+            <h2>🔍 Find Your Perfect Item</h2>
+            <form method="GET" action="{% url 'auction:home' %}">
+                <div class="search-bar">
+                    <input type="text" name="search" placeholder="Search by title or description..." value="{{ request.GET.search }}">
+                    <button type="submit">Search</button>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select name="category">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="">All Status</option>
+                            <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+                            <option value="closed" {% if request.GET.status == 'closed' %}selected{% endif %}>Closed</option>
+                            <option value="sold" {% if request.GET.status == 'sold' %}selected{% endif %}>Sold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Min Price ($)</label>
+                        <input type="number" name="min_price" placeholder="0" value="{{ request.GET.min_price }}" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Max Price ($)</label>
+                        <input type="number" name="max_price" placeholder="Any" value="{{ request.GET.max_price }}" min="0" step="0.01">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Items Grid -->
+        {% if items %}
+            <div class="items-grid">
+                {% for item in items %}
+                    <div class="item-card" onclick="window.location.href='{% url 'auction:item_detail' item.id %}' ">
+                        <div class="item-image">
+                            {% if item.image_url %}
+                                <img src="{{ item.image_url }}" alt="{{ item.title }}">
+                            {% else %}
+                                📦 {{ item.title|slice:":20" }}
+                            {% endif %}
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">{{ item.title }}</div>
+                            <div class="item-description">{{ item.description|truncatewords:15 }}</div>
+                            <div class="item-details">
+                                <div class="item-price">${{ item.current_bid|floatformat:2 }}</div>
+                                <div class="item-status status-{{ item.status }}">{{ item.status }}</div>
+                            </div>
+                            <div class="item-meta">
+                                <span>👤 {{ item.seller.username }}</span>
+                                <span>📅 {{ item.end_date|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-items">
+                <h3>No Auction Items Available</h3>
+                <p>{% if user.is_authenticated %}
+                    Be the first! <a href="{% url 'auction:create_item' %}" style="color: #667eea; font-weight: bold;">Create a new listing</a>
+                {% else %}
+                    <a href="{% url 'auction:login' %}" style="color: #667eea; font-weight: bold;">Login</a> to create your first listing!
+                {% endif %}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>List New Item for Auction</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="title" class="form-label">Item Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label for="starting_bid" class="form-label">Starting Bid ($)</label>
+            <input type="number" class="form-control" id="starting_bid" name="starting_bid" step="0.01" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="condition" class="form-label">Condition</label>
+            <select class="form-control" id="condition" name="condition" required>
+                <option value="">Select condition...</option>
+                <option value="new">New</option>
+                <option value="used">Used - Like New</option>
+                <option value="good">Used - Good</option>
+                <option value="fair">Used - Fair</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="image" class="form-label">Item Image</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">List Item</button>
+        <a href="{% url 'auction:home' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

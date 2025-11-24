@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-md-6">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" class="img-fluid" alt="{{ item.title }}">
+            {% else %}
+                <div class="bg-secondary text-white p-5 text-center">
+                    <h3>No Image Available</h3>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-6">
+            <h2>{{ item.title }}</h2>
+            <p class="text-muted">Listed by: {{ item.seller.name }}</p>
+            <p class="badge bg-info">{{ item.condition|title }}</p>
+            
+            <hr>
+            
+            <h4>Description:</h4>
+            <p>{{ item.description }}</p>
+            
+            <hr>
+            
+            <h4>Bidding Information:</h4>
+            <p><strong>Starting Bid:</strong> ${{ item.starting_bid }}</p>
+            <p><strong>Current Bid:</strong> ${{ item.current_bid|default:item.starting_bid }}</p>
+            <p><strong>Status:</strong> 
+                {% if item.status == 'active' %}
+                    <span class="badge bg-success">Active</span>
+                {% else %}
+                    <span class="badge bg-secondary">Closed</span>
+                {% endif %}
+            </p>
+            
+            {% if item.status == 'active' and user.is_authenticated %}
+                <form method="POST" action="{% url 'auction:place_bid' item.id %}" class="mt-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="bid_amount" class="form-label">Your Bid ($)</label>
+                        <input type="number" class="form-control" id="bid_amount" name="bid_amount" 
+                               step="0.01" min="{{ item.current_bid|default:item.starting_bid }}" required>
+                        <small class="form-text text-muted">
+                            Minimum bid: ${{ item.current_bid|default:item.starting_bid }}
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-success">Place Bid</button>
+                </form>
+            {% elif not user.is_authenticated %}
+                <p class="alert alert-warning mt-3">Please <a href="{% url 'auction:login' %}">login</a> to place a bid.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <hr class="my-5">
+    
+    <h3>Bid History</h3>
+    {% if bids %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Bidder</th>
+                    <th>Bid Amount</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bid in bids %}
+                <tr>
+                    <td>{{ bid.bidder.name }}</td>
+                    <td>${{ bid.amount }}</td>
+                    <td>{{ bid.created_at|date:"M d, Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No bids yet. Be the first to bid!</p>
+    {% endif %}
+    
+    <a href="{% url 'auction:home' %}" class="btn btn-secondary mt-3">Back to Listings</a>
+</div>
+{% endblock %}
